@@ -7,7 +7,7 @@ var MySql = require('sync-mysql');  //sync-mysql is used to create a synchronous
 const options = {
   user: 'p12',
   password: '6VS02E',
-  database: 'cherry',
+  database: 'p12cherry',
   host: 'dataanalytics.temple.edu'
 };
 
