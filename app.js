@@ -27,7 +27,35 @@ app.use(function(req, res, next) {
 
 
 //supporting functions go here
+let commute = function(res, usertoken, miles, speed, location, destination){
+	try{
+	let txtSQL = "insert into commute(usertoken, miles, speed, location, destination) values (?,?,?,?,?)";
+	connection.query(txtSQL,[usertoken, miles, speed, location, destination]);
+	} catch(e){
+	console.log(e);
+	return;
+}
+};
 
+let eimpact = function(res, usertoken, c02emissions, gas_saved, trees){
+	try{
+	let txtSQL = "insert into environmental_impact(usertoken, c02emissions, gas_saved, trees) values (?,?,?,?)";
+	connection.query(txtSQL,[usertoken, c02emissions, gas_saved, trees]);
+	} catch(e){
+	console.log(e);
+	return;
+}
+};
+
+let himpact = function(res, usertoken, bmi, calories_lost){
+	try{
+	let txtSQL = "insert into environmental_impact(usertoken, bmi, calories_lost) values (?,?,?)";
+	connection.query(txtSQL,[usertoken, bmi, calories_lost]);
+	} catch(e){
+	console.log(e);
+	return;
+}
+};
 
 //terminalWrite is the last supporting function to run.  It sends 
 // output to the API consumer and ends the response.
