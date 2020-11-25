@@ -25,6 +25,35 @@ app.use(function(req, res, next) {
     next();  //go process the next matching condition
 });
 
+var getHistory = function(usertoken){
+
+    //if there is a problem with usertoken, then report 
+    //the problem and end the function
+    if (usertoken == undefined || isNaN(usertoken) || usertoken == ""){
+        let result = "Error. No usertoken.  No history.";
+        return result;
+    }
+  
+    //if there is a usertoken, then select the data from the database
+      let result = "History:<br>";
+      
+      let txtSQL = 'select sum(userwon) as sumuserwon, ' + 
+      ' sum(computerwon) as sumcomputerwon, ' +
+      ' sum(tiegame) as sumtiegame ' +
+      ' from history where usertoken = ?;'
+  
+      let results = connection.query(txtSQL, [usertoken]);
+      
+      let wins = fixNull(results[0]['sumuserwon'],0);
+      let losses = fixNull(results[0]['sumcomputerwon'],0);
+      let ties = fixNull(results[0]['sumtiegame'],0);
+      result += "Wins: " + wins + '<br>';
+      result += "Losses: " + losses + '<br>';
+      result += "Tie Games: " + ties + '<br>';
+      return result;
+      
+  };
+
 
 //supporting functions go here
 let commute = function(res, usertoken, miles, speed, location, destination){
@@ -66,14 +95,23 @@ var terminalWrite = function(res,Output,responseStatus){
     res.end();
 };
 
+app.get('/health',function(req,res){
+    var result = "";
+    //get query string values
+    var choice = req.query.choice; // this gets the users choice from the query string
+     // result is an array
+    console.log(result);
+     terminalWrite(res,result,200);
+ });
+ 
 //app event handlers go here
-app.get('/', function(req, res) {
+app.get('/history', function(req, res) {
     //what to do if request has no route ... show instructions
-    var message = [];
-    message[0] = "Instructions go here.";
-    message[1] = "More instructions go here.";
-	terminalWrite(res,message,200);
+    var usertoken = req.query.usertoken;
+    var result = getHistory(usertoken);
+    terminalWrite(res,result,200);
 });
+
 
 //This piece of code creates the server  
 //and listens for a request on a port
